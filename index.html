@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>淡江綠野仙蹤：校園植物棲地探勘</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(22, 163, 74, 0.2);
+        }
+        .terrain-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .terrain-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(22, 163, 74, 0.25), 0 8px 10px -6px rgba(22, 163, 74, 0.2);
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen relative overflow-x-hidden">
+
+    <!-- 頂部導覽列 -->
+    <header class="bg-emerald-800 text-white shadow-md py-4 px-6 flex justify-between items-center z-10">
+        <div class="flex items-center space-x-3">
+            <span class="text-3xl">🌿</span>
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">淡江綠野仙蹤：校園植物棲地探勘</h1>
+                <p class="text-xs text-emerald-200">Tamsui Campus Plant Habitat Exploration</p>
+            </div>
+        </div>
+        <div id="status-badge" class="hidden bg-emerald-700 px-4 py-2 rounded-full text-sm font-medium border border-emerald-600 shadow-inner">
+            探勘進度：回合 <span id="current-round-num">1</span> / <span id="total-round-num">5</span>
+        </div>
+    </header>
+
+    <!-- 主要內容容器 -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
+
+        <!-- 1. 起始教學畫面 (教育前導面板) -->
+        <div id="intro-screen" class="w-full max-w-5xl glass-card rounded-3xl shadow-2xl p-6 sm:p-10 my-auto">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <span class="inline-block p-3 bg-emerald-100 text-emerald-700 rounded-2xl text-4xl mb-4 shadow-sm">🏫🌱</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-emerald-900 mb-3">歡迎來到淡江校園生態探勘！</h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    淡江大學校園依山面海、座落淡水丘陵，擁有獨特的微氣候與豐富的植被生態。身為校園生態研究員，你需要使用<strong>「滑鼠溫濕度探測儀」</strong>穿梭於六大校園特色地形中，為以下 7 種代表性校園植物尋找最舒適的安居之所！
+                </p>
+            </div>
+
+            <!-- 植物知識卡片網格 (7種植物) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8 max-h-[420px] overflow-y-auto pr-2">
+                <!-- 1. 豔紫荊 -->
+                <div class="bg-white/85 rounded-2xl p-4 border border-purple-200 shadow-sm flex flex-col justify-between hover:border-purple-400 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌺</span>
+                            <span class="text-[11px] font-semibold px-2 py-0.5 bg-purple-100 text-purple-800 rounded-full">溫暖明亮</span>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-800 mb-1">豔紫荊</h3>
+                        <p class="text-xs text-slate-500 mb-2">花大豔麗，常見於校園陽光充足的緩坡與大道旁。</p>
+                    </div>
+                    <div class="bg-purple-50 rounded-xl p-2.5 text-xs space-y-0.5 border border-purple-100">
+                        <div class="flex justify-between font-medium text-purple-900">
+                            <span>最佳溫度：</span><span class="font-bold">26°C - 31°C</span>
+                        </div>
+                        <div class="flex justify-between font-medium text-purple-900">
+                            <span>最佳濕度：</span><span class="font-bold">45% - 60%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 相思樹 -->
+                <div class="bg-white/85 rounded-2xl p-4 border border-amber-200 shadow-sm flex flex-col justify-between hover:border-amber-400 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🪵</span>
+                            <span class="text-[11px] font-semibold px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full">耐旱耐熱</span>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-800 mb-1">相思樹</h3>
+                        <p class="text-xs text-slate-500 mb-2">台灣本土樹種，根系深廣，適應乾旱向陽的山坡地。</p>
+                    </div>
+                    <div class="bg-amber-50 rounded-xl p-2.5 text-xs space-y-0.5 border border-amber-100">
+                        <div class="flex justify-between font-medium text-amber-900">
+                            <span>最佳溫度：</span><span class="font-bold">28°C - 34°C</span>
+                        </div>
+                        <div class="flex justify-between font-medium text-amber-900">
+                            <span>最佳濕度：</span><span class="font-bold">35% - 50%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. 大花紫薇 -->
+                <div class="bg-white/85 rounded-2xl p-4 border border-pink-200 shadow-sm flex flex-col justify-between hover:border-pink-400 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌸</span>
+                            <span class="text-[11px] font-semibold px-2 py-0.5 bg-pink-100 text-pink-800 rounded-full">溫和中濕</span>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-800 mb-1">大花紫薇</h3>
+                        <p class="text-xs text-slate-500 mb-2">夏季盛開紫紅花朵，喜愛溫暖且水氣適中的沃土。</p>
+                    </div>
+                    <div class="bg-pink-50 rounded-xl p-2.5 text-xs space-y-0.5 border border-pink-100">
+                        <div class="flex justify-between font-medium text-pink-900">
+                            <span>最佳溫度：</span><span class="font-bold">25°C - 30°C</span>
+                        </div>
+                        <div class="flex justify-between font-medium text-pink-900">
+                            <span>最佳濕度：</span><span class="font-bold">55% - 70%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. 杜鵑花 -->
+                <div class="bg-white/85 rounded-2xl p-4 border border-rose-200 shadow-sm flex flex-col justify-between hover:border-rose-400 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌺</span>
+                            <span class="text-[11px] font-semibold px-2 py-0.5 bg-rose-100 text-rose-800 rounded-full">涼爽高濕</span>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-800 mb-1">杜鵑花</h3>
+                        <p class="text-xs text-slate-500 mb-2">淡江校園春日嬌點，喜好清涼霧氣與高濕度環境。</p>
+                    </div>
+                    <div class="bg-rose-50 rounded-xl p-2.5 text-xs space-y-0.5 border border-rose-100">
+                        <div class="flex justify-between font-medium text-rose-900">
+                            <span>最佳溫度：</span><span class="font-bold">18°C - 23°C</span>
+                        </div>
+                        <div class="flex justify-between font-medium text-rose-900">
+                            <span>最佳濕度：</span><span class="font-bold">70% - 85%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. 樟樹 -->
+                <div class="bg-white/85 rounded-2xl p-4 border border-emerald-200 shadow-sm flex flex-col justify-between hover:border-emerald-400 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌳</span>
+                            <span class="text-[11px] font-semibold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full">溫和舒適</span>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-800 mb-1">樟樹</h3>
+                        <p class="text-xs text-slate-500 mb-2">香氣撲鼻、綠蔭遮天，為校園步道提供舒適遮蔽。</p>
+                    </div>
+                    <div class="bg-emerald-50 rounded-xl p-2.5 text-xs space-y-0.5 border border-emerald-100">
+                        <div class="flex justify-between font-medium text-emerald-900">
+                            <span>最佳溫度：</span><span class="font-bold">22°C - 27°C</span>
+                        </div>
+                        <div class="flex justify-between font-medium text-emerald-900">
+                            <span>最佳濕度：</span><span class="font-bold">60% - 75%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. 榕樹 -->
+                <div class="bg-white/85 rounded-2xl p-4 border border-teal-200 shadow-sm flex flex-col justify-between hover:border-teal-400 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌿</span>
+                            <span class="text-[11px] font-semibold px-2 py-0.5 bg-teal-100 text-teal-800 rounded-full">強韌適應</span>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-800 mb-1">榕樹</h3>
+                        <p class="text-xs text-slate-500 mb-2">氣根發達、枝葉繁茂，適應各種中度溫濕環境。</p>
+                    </div>
+                    <div class="bg-teal-50 rounded-xl p-2.5 text-xs space-y-0.5 border border-teal-100">
+                        <div class="flex justify-between font-medium text-teal-900">
+                            <span>最佳溫度：</span><span class="font-bold">24°C - 29°C</span>
+                        </div>
+                        <div class="flex justify-between font-medium text-teal-900">
+                            <span>最佳濕度：</span><span class="font-bold">50% - 70%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. 山櫻花 -->
+                <div class="bg-white/85 rounded-2xl p-4 border border-red-200 shadow-sm flex flex-col justify-between hover:border-red-400 transition md:col-span-2 lg:col-span-1">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl">🌸</span>
+                            <span class="text-[11px] font-semibold px-2 py-0.5 bg-red-100 text-red-800 rounded-full">寒冷清幽</span>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-800 mb-1">山櫻花</h3>
+                        <p class="text-xs text-slate-500 mb-2">喜愛淡水冬季較低溫與山區霧氣繚繞的環境。</p>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-2.5 text-xs space-y-0.5 border border-red-100">
+                        <div class="flex justify-between font-medium text-red-900">
+                            <span>最佳溫度：</span><span class="font-bold">15°C - 20°C</span>
+                        </div>
+                        <div class="flex justify-between font-medium text-red-900">
+                            <span>最佳濕度：</span><span class="font-bold">65% - 80%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 開始按鈕 -->
+            <div class="text-center">
+                <button onclick="startGame()" class="px-9 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-lg rounded-2xl shadow-lg hover:from-emerald-700 hover:to-teal-700 transition transform hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-emerald-300">
+                    🚀 開始校園探勘任務 (共 5 回合)
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. 遊戲主畫面 -->
+        <div id="game-screen" class="hidden w-full max-w-7xl flex flex-col space-y-5">
+            
+            <!-- 任務提示與當前目標面板 -->
+            <div class="glass-card rounded-2xl p-4 sm:p-5 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 border-l-8 border-l-emerald-600">
+                <div class="flex items-center space-x-4">
+                    <div id="target-emoji" class="text-4xl p-3 bg-emerald-100 rounded-2xl shadow-inner">🌺</div>
+                    <div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-0.5">當前探勘目標 (回合 <span id="round-display-num">1</span> / <span id="total-round-display">5</span>)</div>
+                        <h2 id="target-title" class="text-xl sm:text-2xl font-black text-slate-800">請為「豔紫荊」尋找適合的棲地！</h2>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-emerald-900 flex items-center space-x-2 shadow-sm">
+                    <span>💡 <strong>操作提示：</strong>將滑鼠移至地形卡片上即時探測溫濕度，點擊正確區塊解謎！</span>
+                </div>
+            </div>
+
+            <!-- 六個淡江校園特色地形區塊網格 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                
+                <!-- 地形 1：宮燈大道旁 -->
+                <div id="terrain-0" onclick="selectTerrain(0)" class="terrain-card glass-card rounded-2xl p-5 cursor-pointer relative overflow-hidden flex flex-col justify-between h-52 border-2 border-transparent hover:border-emerald-500 shadow-md">
+                    <div class="absolute -right-3 -bottom-3 text-7xl opacity-15 select-none pointer-events-none">🏮</div>
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-3xl p-2 bg-amber-100 rounded-xl shadow-sm">🏮</span>
+                            <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full shadow-inner">地形 01</span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-800 mb-0.5">宮燈大道旁</h3>
+                        <p class="text-xs text-slate-500">淡江最具代表性古色古香的道路，日照充足、微風徐徐。</p>
+                    </div>
+                    <div class="bg-white/95 backdrop-blur rounded-xl p-2.5 border border-slate-200 shadow-inner">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">探測儀即時讀數</div>
+                        <div class="flex justify-between items-center text-sm font-bold">
+                            <span class="text-rose-600 flex items-center">🌡️ <span id="temp-0">--</span>°C</span>
+                            <span class="text-blue-600 flex items-center">💧 <span id="hum-0">--</span>%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 地形 2：商管大樓中庭 -->
+                <div id="terrain-1" onclick="selectTerrain(1)" class="terrain-card glass-card rounded-2xl p-5 cursor-pointer relative overflow-hidden flex flex-col justify-between h-52 border-2 border-transparent hover:border-emerald-500 shadow-md">
+                    <div class="absolute -right-3 -bottom-3 text-7xl opacity-15 select-none pointer-events-none">🏢</div>
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-3xl p-2 bg-blue-100 rounded-xl shadow-sm">🏢</span>
+                            <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full shadow-inner">地形 02</span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-800 mb-0.5">商管大樓中庭</h3>
+                        <p class="text-xs text-slate-500">建築環繞形成的半封閉溫暖廣場，陽光充足且通風適中。</p>
+                    </div>
+                    <div class="bg-white/95 backdrop-blur rounded-xl p-2.5 border border-slate-200 shadow-inner">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">探測儀即時讀數</div>
+                        <div class="flex justify-between items-center text-sm font-bold">
+                            <span class="text-rose-600 flex items-center">🌡️ <span id="temp-1">--</span>°C</span>
+                            <span class="text-blue-600 flex items-center">💧 <span id="hum-1">--</span>%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 地形 3：福園 -->
+                <div id="terrain-2" onclick="selectTerrain(2)" class="terrain-card glass-card rounded-2xl p-5 cursor-pointer relative overflow-hidden flex flex-col justify-between h-52 border-2 border-transparent hover:border-emerald-500 shadow-md">
+                    <div class="absolute -right-3 -bottom-3 text-7xl opacity-15 select-none pointer-events-none">🌸</div>
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-3xl p-2 bg-rose-100 rounded-xl shadow-sm">🌸</span>
+                            <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full shadow-inner">地形 03</span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-800 mb-0.5">福園</h3>
+                        <p class="text-xs text-slate-500">校園幽靜花園，草木扶疏，空氣濕潤且微蔭涼爽。</p>
+                    </div>
+                    <div class="bg-white/95 backdrop-blur rounded-xl p-2.5 border border-slate-200 shadow-inner">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">探測儀即時讀數</div>
+                        <div class="flex justify-between items-center text-sm font-bold">
+                            <span class="text-rose-600 flex items-center">🌡️ <span id="temp-2">--</span>°C</span>
+                            <span class="text-blue-600 flex items-center">💧 <span id="hum-2">--</span>%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 地形 4：文學館草坪 -->
+                <div id="terrain-3" onclick="selectTerrain(3)" class="terrain-card glass-card rounded-2xl p-5 cursor-pointer relative overflow-hidden flex flex-col justify-between h-52 border-2 border-transparent hover:border-emerald-500 shadow-md">
+                    <div class="absolute -right-3 -bottom-3 text-7xl opacity-15 select-none pointer-events-none">📜</div>
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-3xl p-2 bg-emerald-100 rounded-xl shadow-sm">📜</span>
+                            <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full shadow-inner">地形 04</span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-800 mb-0.5">文學館草坪</h3>
+                        <p class="text-xs text-slate-500">文錙藝術大樓與文學館周邊的開闊草地，日照與濕度均勻。</p>
+                    </div>
+                    <div class="bg-white/95 backdrop-blur rounded-xl p-2.5 border border-slate-200 shadow-inner">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">探測儀即時讀數</div>
+                        <div class="flex justify-between items-center text-sm font-bold">
+                            <span class="text-rose-600 flex items-center">🌡️ <span id="temp-3">--</span>°C</span>
+                            <span class="text-blue-600 flex items-center">💧 <span id="hum-3">--</span>%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 地形 5：海事博物館後山 -->
+                <div id="terrain-4" onclick="selectTerrain(4)" class="terrain-card glass-card rounded-2xl p-5 cursor-pointer relative overflow-hidden flex flex-col justify-between h-52 border-2 border-transparent hover:border-emerald-500 shadow-md">
+                    <div class="absolute -right-3 -bottom-3 text-7xl opacity-15 select-none pointer-events-none">⛰️</div>
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-3xl p-2 bg-teal-100 rounded-xl shadow-sm">⛰️</span>
+                            <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full shadow-inner">地形 05</span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-800 mb-0.5">海事博物館後山</h3>
+                        <p class="text-xs text-slate-500">地勢較高且臨近山坡邊界，常年霧氣較重、清涼高濕。</p>
+                    </div>
+                    <div class="bg-white/95 backdrop-blur rounded-xl p-2.5 border border-slate-200 shadow-inner">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">探測儀即時讀數</div>
+                        <div class="flex justify-between items-center text-sm font-bold">
+                            <span class="text-rose-600 flex items-center">🌡️ <span id="temp-4">--</span>°C</span>
+                            <span class="text-blue-600 flex items-center">💧 <span id="hum-4">--</span>%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 地形 6：宮燈教室旁林蔭 -->
+                <div id="terrain-5" onclick="selectTerrain(5)" class="terrain-card glass-card rounded-2xl p-5 cursor-pointer relative overflow-hidden flex flex-col justify-between h-52 border-2 border-transparent hover:border-emerald-500 shadow-md">
+                    <div class="absolute -right-3 -bottom-3 text-7xl opacity-15 select-none pointer-events-none">🌲</div>
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-3xl p-2 bg-green-100 rounded-xl shadow-sm">🌲</span>
+                            <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full shadow-inner">地形 06</span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-800 mb-0.5">宮燈教室旁林蔭</h3>
+                        <p class="text-xs text-slate-500">老樹參天、樹冠遮蔽率高，環境陰涼且水氣悶濕。</p>
+                    </div>
+                    <div class="bg-white/95 backdrop-blur rounded-xl p-2.5 border border-slate-200 shadow-inner">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">探測儀即時讀數</div>
+                        <div class="flex justify-between items-center text-sm font-bold">
+                            <span class="text-rose-600 flex items-center">🌡️ <span id="temp-5">--</span>°C</span>
+                            <span class="text-blue-600 flex items-center">💧 <span id="hum-5">--</span>%</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 3. 結算畫面 (任務完成) -->
+        <div id="complete-screen" class="hidden w-full max-w-2xl glass-card rounded-3xl shadow-2xl p-8 sm:p-10 text-center my-auto">
+            <span class="inline-block p-4 bg-emerald-100 text-emerald-700 rounded-3xl text-5xl mb-4 shadow-sm animate-bounce">🏆</span>
+            <h2 class="text-3xl font-black text-emerald-900 mb-3">恭喜榮獲「淡江生態達人」稱號！</h2>
+            <p class="text-slate-600 text-base mb-8 leading-relaxed">
+                你已成功穿梭於淡江校園六大特色地形，並完美運用溫濕度探測儀，為多種校園花草樹木找到了最合適的生長微氣候！感謝你對淡江大學生物多樣性與校園綠化的守護。
+            </p>
+            <div class="flex justify-center space-x-4">
+                <button onclick="restartGame()" class="px-8 py-3.5 bg-emerald-600 text-white font-bold rounded-xl shadow-lg hover:bg-emerald-700 transition transform hover:-translate-y-0.5">
+                    🔄 再次挑戰探勘
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 4. 判定與回饋系統 Modal 彈跳視窗 -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 transition-opacity">
+        <div id="modal-container" class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 transform transition-all scale-95 opacity-0 duration-200">
+            <div id="modal-icon" class="text-5xl mb-3 text-center">🎉</div>
+            <h3 id="modal-title" class="text-xl font-bold text-slate-800 text-center mb-2">判定結果</h3>
+            <p id="modal-message" class="text-slate-600 text-sm text-center mb-6 leading-relaxed">回饋訊息說明...</p>
+            
+            <div class="flex justify-center">
+                <button id="modal-action-btn" onclick="closeModal()" class="w-full py-3.5 rounded-xl font-bold text-white shadow-md transition">
+                    確認
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 頁尾 -->
+    <footer class="text-center py-4 text-xs text-slate-500 border-t border-emerald-100/60 mt-auto">
+        淡江綠野仙蹤：校園植物棲地探勘 © 2026 互動生態教育專案
+    </footer>
+
+    <!-- JavaScript 遊戲邏輯 -->
+    <script>
+        // 7 種擴充的淡江校園花草樹木題庫
+        const plants = [
+            {
+                name: "豔紫荊",
+                emoji: "🌺",
+                tempMin: 26, tempMax: 31,
+                humMin: 45, humMax: 60,
+                desc: "溫暖明亮的向陽坡地"
+            },
+            {
+                name: "相思樹",
+                emoji: "🪵",
+                tempMin: 28, tempMax: 34,
+                humMin: 35, humMax: 50,
+                desc: "耐旱耐熱的高溫乾燥山坡"
+            },
+            {
+                name: "大花紫薇",
+                emoji: "🌸",
+                tempMin: 25, tempMax: 30,
+                humMin: 55, humMax: 70,
+                desc: "溫和中濕的廣場沃土"
+            },
+            {
+                name: "杜鵑花",
+                emoji: "🌺",
+                tempMin: 18, tempMax: 23,
+                humMin: 70, humMax: 85,
+                desc: "涼爽高濕的山區幽徑"
+            },
+            {
+                name: "樟樹",
+                emoji: "🌳",
+                tempMin: 22, tempMax: 27,
+                humMin: 60, humMax: 75,
+                desc: "溫和舒適的步道綠蔭"
+            },
+            {
+                name: "榕樹",
+                emoji: "🌿",
+                tempMin: 24, tempMax: 29,
+                humMin: 50, humMax: 70,
+                desc: "強韌適應的中庸環境"
+            },
+            {
+                name: "山櫻花",
+                emoji: "🌸",
+                tempMin: 15, tempMax: 20,
+                humMin: 65, humMax: 80,
+                desc: "寒冷清幽的高處山坡"
+            }
+        ];
+
+        // 6 個淡江校園特色地形名稱
+        const terrainNames = [
+            "宮燈大道旁",
+            "商管大樓中庭",
+            "福園",
+            "文學館草坪",
+            "海事博物館後山",
+            "宮燈教室旁林蔭"
+        ];
+
+        // 遊戲狀態變數
+        const TOTAL_ROUNDS = 5; // 每次隨機抽取 5 個回合
+        let roundOrder = [];
+        let currentRoundIndex = 0;
+        let currentPlant = null;
+        let terrainData = []; // 儲存當前回合 6 個地形生成的溫濕度
+        let correctTerrainIndex = 0; // 正確解答的地形索引 (0~5)
+        let isModalCorrectState = false;
+
+        // 啟動遊戲
+        function startGame() {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('status-badge').classList.remove('hidden');
+            document.getElementById('total-round-num').innerText = TOTAL_ROUNDS;
+            document.getElementById('total-round-display').innerText = TOTAL_ROUNDS;
+
+            // 從 7 種植物中隨機抽取 5 種作為題目順序
+            let indices = Array.from({ length: plants.length }, (_, i) => i);
+            roundOrder = shuffleArray(indices).slice(0, TOTAL_ROUNDS);
+            currentRoundIndex = 0;
+
+            setupRound();
+        }
+
+        // 陣列隨機洗牌輔助函數
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // 產生隨機數值 (包含 min 與 max)
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // 設定當前回合
+        function setupRound() {
+            const plantIdx = roundOrder[currentRoundIndex];
+            currentPlant = plants[plantIdx];
+
+            // 更新面板
+            document.getElementById('current-round-num').innerText = currentRoundIndex + 1;
+            document.getElementById('round-display-num').innerText = currentRoundIndex + 1;
+            document.getElementById('target-emoji').innerText = currentPlant.emoji;
+            document.getElementById('target-title').innerText = `請為「${currentPlant.name}」尋找適合的棲地！`;
+
+            // 隨機決定 6 個地形中哪一個是正確解答 (0 到 5)
+            correctTerrainIndex = Math.floor(Math.random() * 6);
+
+            // 重新為 6 個地形生成溫濕度數值
+            terrainData = [];
+            for (let i = 0; i < 6; i++) {
+                let t, h;
+                if (i === correctTerrainIndex) {
+                    // 核心保證：完全落在當前植物的適宜範圍內
+                    t = getRandomInt(currentPlant.tempMin, currentPlant.tempMax);
+                    h = getRandomInt(currentPlant.humMin, currentPlant.humMax);
+                } else {
+                    // 干擾項：確保溫度或濕度至少有一項落在植物適宜範圍外
+                    do {
+                        t = getRandomInt(13, 36);
+                        h = getRandomInt(30, 90);
+                    } while (
+                        t >= currentPlant.tempMin && t <= currentPlant.tempMax &&
+                        h >= currentPlant.humMin && h <= currentPlant.humMax
+                    );
+                }
+                terrainData.push({ temp: t, hum: h });
+
+                // 初始化 DOM 顯示
+                document.getElementById(`temp-${i}`).innerText = t;
+                document.getElementById(`hum-${i}`).innerText = h;
+            }
+        }
+
+        // 玩家點擊地形進行確認
+        function selectTerrain(terrainIdx) {
+            const selectedTerrainName = terrainNames[terrainIdx];
+            const isCorrect = (terrainIdx === correctTerrainIndex);
+
+            isModalCorrectState = isCorrect;
+
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalContainer = document.getElementById('modal-container');
+            const modalIcon = document.getElementById('modal-icon');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalActionBtn = document.getElementById('modal-action-btn');
+
+            if (isCorrect) {
+                modalIcon.innerText = "🌟";
+                modalTitle.innerText = "探勘成功！環境完美契合";
+                modalMessage.innerHTML = `太棒了！<strong>${selectedTerrainName}</strong> 的溫度（${terrainData[terrainIdx].temp}°C）與濕度（${terrainData[terrainIdx].hum}%）完全符合 <strong>${currentPlant.name}</strong> 的生長需求（溫度 ${currentPlant.tempMin}-${currentPlant.tempMax}°C，濕度 ${currentPlant.humMin}-${currentPlant.humMax}%）。植物在這裡將能欣欣向榮！`;
+                
+                if (currentRoundIndex < TOTAL_ROUNDS - 1) {
+                    modalActionBtn.innerText = "進入下一回合 ➔";
+                    modalActionBtn.className = "w-full py-3.5 rounded-xl font-bold text-white shadow-md bg-emerald-600 hover:bg-emerald-700 transition";
+                } else {
+                    modalActionBtn.innerText = "查看最終結算 🏆";
+                    modalActionBtn.className = "w-full py-3.5 rounded-xl font-bold text-white shadow-md bg-teal-600 hover:bg-teal-700 transition";
+                }
+            } else {
+                modalIcon.innerText = "⚠️";
+                modalTitle.innerText = "棲地不適合，請重新探測！";
+                
+                // 教育性回饋分析
+                let reason = "";
+                const t = terrainData[terrainIdx].temp;
+                const h = terrainData[terrainIdx].hum;
+                if (t < currentPlant.tempMin) reason += "溫度偏低，";
+                else if (t > currentPlant.tempMax) reason += "溫度偏高，";
+                else reason += "溫度適中，";
+
+                if (h < currentPlant.humMin) reason += "濕度太乾枯不足。";
+                else if (h > currentPlant.humMax) reason += "濕度太過潮濕悶熱。";
+                else reason += "濕度剛好合適。";
+
+                modalMessage.innerHTML = `這裡（<strong>${selectedTerrainName}</strong>）測得溫度 ${t}°C、濕度 ${h}%。<br>${reason}這對 <strong>${currentPlant.name}</strong>（${currentPlant.desc}）而言並非理想棲息地。請再試試其他地形！`;
+                
+                modalActionBtn.innerText = "重新選擇棲地";
+                modalActionBtn.className = "w-full py-3.5 rounded-xl font-bold text-white shadow-md bg-amber-600 hover:bg-amber-700 transition";
+            }
+
+            // 顯示 Modal
+            modalBackdrop.classList.remove('hidden');
+            setTimeout(() => {
+                modalContainer.classList.remove('scale-95', 'opacity-0');
+                modalContainer.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        // 關閉 Modal 或進入下一回合
+        function closeModal() {
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalContainer = document.getElementById('modal-container');
+
+            modalContainer.classList.remove('scale-100', 'opacity-100');
+            modalContainer.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modalBackdrop.classList.add('hidden');
+
+                if (isModalCorrectState) {
+                    currentRoundIndex++;
+                    if (currentRoundIndex < TOTAL_ROUNDS) {
+                        setupRound();
+                    } else {
+                        // 遊戲通關，顯示結算畫面
+                        document.getElementById('game-screen').classList.add('hidden');
+                        document.getElementById('status-badge').classList.add('hidden');
+                        document.getElementById('complete-screen').classList.remove('hidden');
+                    }
+                }
+            }, 200);
+        }
+
+        // 重新遊玩
+        function restartGame() {
+            document.getElementById('complete-screen').classList.add('hidden');
+            startGame();
+        }
+    </script>
+</body>
+</html>
